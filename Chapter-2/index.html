@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <h1>CHAT APP</h1>
+    <div id="messageDisplay" style="height: 50vh; width: 50vw; background-color: teal; margin-bottom: 20px; color: white;"></div>
+    <input type="text" id="message" placeholder="Type your message here...">
+    <button onclick="sendMessage()">Send</button>
+
+
+    <!-- by script -> connect socket with frontend and backend too -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      // console.log(socket.id); // **** undefined why ? -> kyuki thoda time lagega na connection banne pe isi liye undefined hai jaise connect hoga toh id print ho jayegi
+    
+      // or check connection hone ke baad
+    
+    // socket.on('connect',()=>{ // connection ke baad direct id print hogi
+    //     console.log(socket.id);
+    // }) // on -> means listening
+
+    const messagebox = document.getElementById('messageDisplay');
+    const messageInput = document.getElementById('message');
+
+    function sendMessage(){
+      const msg = messageInput.value;
+      socket.emit('message',msg); // msg bhejna
+      const element = document.createElement('div');
+      element.textContent = msg;
+      element.style.textAlign = 'right';
+      messagebox.appendChild(element);
+      messageInput.value = '';
+    }
+
+    socket.on('new-message',(data)=>{ // listening for msg
+      const element = document.createElement('div');
+      element.textContent = data;
+      messagebox.appendChild(element);
+    })
+
+    </script>
+
+</body>
+</html>
